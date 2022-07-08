@@ -20,31 +20,30 @@
 ---     {}, nil, false, 0, "" -> ""\
 ---     {"a", "b"}            -> "ab"\
 ---     {97, 98}              -> "ab"\
----     1                     -> "1"\
+---     97                    -> "a"\
 ---     true                  -> "true"\
 --- @param value any
 --- @param type string
 --- @return any
 local function coerce(value, type)
+    if _G.type(value) == type then return value end
+
     local coerce_bool_table = {
-        ["nil"]     = function() return false end,
-        ["table"]   = function() return table.maxn(value) == 0 end,
-        ["string"]  = function() return string.len(value) == 0 end,
-        ["number"]  = function() return value == 0 end,
-        ["boolean"] = value,
+        ["nil"]    = function() return false end,
+        ["table"]  = function() return table.maxn(value) == 0 end,
+        ["string"] = function() return string.len(value) == 0 end,
+        ["number"] = function() return value == 0 end,
     }
 
     local coerce_number_table = {
         ["nil"]     = function() return 0 end,
         ["table"]   = table.maxn,
         ["string"]  = string.len,
-        ["number"]  = value,
         ["boolean"] = function() if value then return 1 else return 0 end end,
     }
 
     local coerce_table_table = {
         ["nil"]     = function() return {} end,
-        ["table"]   = value,
         ["string"]  = function()
             str = {}
             value:gsub(".", function(c) table.insert(str, c) end)
@@ -63,8 +62,7 @@ local function coerce(value, type)
             end
             return table.concat(temp)
         end,
-        ["string"]  = value,
-        ["number"]  = string.format("%d", value),
+        ["number"]  = string.char,
         ["boolean"] = (value and "true" or "false"),
     }
 
