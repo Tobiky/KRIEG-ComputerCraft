@@ -57,7 +57,11 @@ local function coerce(value, type)
     local coerce_string_table = {
         ["nil"]     = function() return "" end,
         ["table"]   = function()
-            -- coerce every value to the first type
+            temp = {}
+            for _, val in value do
+                temp[#temp + 1] = coerce(value, "string")
+            end
+            return table.concat(temp)
         end,
         ["string"]  = value,
         ["number"]  = string.format("%d", value),
