@@ -1,3 +1,3 @@
 return {
-    coerce = require("std.coerce")
+    coerce = require "std.coerce"
 }
