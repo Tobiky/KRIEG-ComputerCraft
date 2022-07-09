@@ -30,14 +30,14 @@ local function coerce(value, type)
 
     local coerce_bool_table = {
         ["nil"]    = function() return false end,
-        ["table"]  = function() return table.maxn(value) == 0 end,
+        ["table"]  = function() return #value == 0 end,
         ["string"] = function() return string.len(value) == 0 end,
         ["number"] = function() return value == 0 end,
     }
 
     local coerce_number_table = {
         ["nil"]     = function() return 0 end,
-        ["table"]   = table.maxn,
+        ["table"]   = function() return #value end,
         ["string"]  = string.len,
         ["boolean"] = function() if value then return 1 else return 0 end end,
     }
